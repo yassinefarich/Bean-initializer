@@ -21,6 +21,16 @@ public class BeanInitializer<T> implements BeanInitializerOptions<T> {
 		return new BeanInitializer<T>(instance);
 	}
 
+	public static <T> BeanInitializerOptions<T> createNew(Class<T> clazz) {
+		T instance;
+		try {
+			instance = clazz.newInstance();
+			return new BeanInitializer<T>(instance);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Override
 	public T withOnlySubPropertiesInPackages(List<String> packages) {
 		Objects.requireNonNull(packages);
