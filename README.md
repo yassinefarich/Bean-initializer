@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/yassinefarich/Bean-initializer.svg?branch=master)](https://travis-ci.org/yassinefarich/Bean-initializer)
 # Bean-initializer
 
 Bean-initializer is a Java utilitiy dedicated to help java developers to initialize Objects with Complicated hierarchy .
