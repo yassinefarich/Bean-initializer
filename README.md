@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.org/yassinefarich/Bean-initializer.svg?branch=master)](https://travis-ci.org/yassinefarich/Bean-initializer)
 # Bean-initializer
 
-Bean-initializer is a Java utilitiy dedicated to help java developers to initialize Objects with Complicated hierarchy .
+Bean-initializer is a Java utilitiy dedicated to help developers to initialize Objects with Complicated hierarchy .
+
 Bean-initializer use only reflexive API , which make it easy to be integrated in java projects .
 
 **Note** : Project is under construction :construction: :construction:
@@ -18,12 +19,12 @@ Bean-initializer use only reflexive API , which make it easy to be integrated in
 		Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
  ```
  
-More example of uses will be available on UnitTests .
+More examples are available on [Test class](https://github.com/yassinefarich/Bean-initializer/blob/master/src/test/java/io/github/yfarich/beaninitializer/BeanInitializerTest.java).
 
 ### Prerequisites
  * Java 8
  * no argument constructor for objects 
- * TypeSupplier for Abstract classes or interfaces or Objects with no argument constructor *Example below*
+ * TypeSupplier for Abstract classes ,interfaces or Objects with no argument constructor *(Example below)*
  ```java
      Country france = BeanInitializer.createNew(Country.class)
                        .withTypeSupplier(List.class, () -> new ArrayList<>()) // 'List' is Abstract type (Interface) 
