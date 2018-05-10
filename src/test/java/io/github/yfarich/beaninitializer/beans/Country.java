@@ -3,8 +3,8 @@ package io.github.yfarich.beaninitializer.beans;
 public class Country {
 
 	private City capitaCity;
-	private String name;
-	private double population;
+	public String name;
+	private Double population;
 	
 	public City getCapitaCity() {
 		return capitaCity;

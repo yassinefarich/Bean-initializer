@@ -1,4 +1,4 @@
-package io.github.yfarich;
+package io.github.yfarich.beaninitializer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,11 +34,14 @@ public class RecursiveInitializer {
 						+ " >> Has been instanciated before in this branch");
 			}
 
-			Field[] fields = object.getClass().getDeclaredFields();
-			Arrays.stream(fields).filter(field -> !field.getType().isPrimitive()) // Remove primitive types
-					.filter(field -> predicates.stream().anyMatch(stringPredicate -> stringPredicate.test(field)))
-					.map(instantiateFieldsOn(object)).filter(Optional::isPresent).map(Optional::get).forEach(
-							fieldObject -> initializeRecursively(fieldObject, predicates, new ArrayList<>(classStack)));
+			if (!beanComeFromSuppliers(object.getClass())) {
+				Field[] fields = object.getClass().getDeclaredFields();
+				Arrays.stream(fields).filter(field -> !field.getType().isPrimitive()) // Remove primitive types
+						.filter(field -> predicates.stream().anyMatch(stringPredicate -> stringPredicate.test(field)))
+						.map(instantiateFieldsOn(object)).filter(Optional::isPresent).map(Optional::get)
+						.forEach(fieldObject -> initializeRecursively(fieldObject, predicates,
+								new ArrayList<>(classStack)));
+			}
 
 		} catch (RuntimeException e) {
 			LOGGER.log(Level.WARNING, e.getMessage());
@@ -90,6 +93,10 @@ public class RecursiveInitializer {
 
 	private <T> Optional<Supplier<?>> findSupplier(Class<T> clazz) {
 		return Optional.ofNullable(suppliers.get(clazz));
+	}
+
+	private boolean beanComeFromSuppliers(Class<? extends Object> class1) {
+		return suppliers.containsKey(class1);
 	}
 
 	public RecursiveInitializer withSuppliers(Map<Class<?>, Supplier<?>> beanSuppliers) {
