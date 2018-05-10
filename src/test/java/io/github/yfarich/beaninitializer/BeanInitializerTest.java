@@ -1,6 +1,8 @@
 package io.github.yfarich.beaninitializer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -11,10 +13,14 @@ import io.github.yfarich.beaninitializer.beans.Country;
 
 public class BeanInitializerTest {
 
+	/*
+	 * Initialization configuration for(Type) set provider (For java.lang classes)
+	 * reflexive initialisation !!!
+	 * 
+	 */
 	@Test
 	public void createNewTest() {
 		City grenoble = BeanInitializer.createNew(City.class).withAllSubProperties();
-
 		Assertions.assertThat(grenoble).isNotNull();
 		Assertions.assertThat(grenoble.getCityName()).isNotNull();
 		Assertions.assertThat(grenoble.getPhonePrefix()).isNotNull();
@@ -24,7 +30,9 @@ public class BeanInitializerTest {
 	public void withAllSubPropertiesTest() {
 		Country france = new Country();
 
-		france = BeanInitializer.initialize(france).withAllSubProperties();
+		france = BeanInitializer.initialize(france)
+				.withTypeSupplier(List.class, () -> new ArrayList<>())
+				.withAllSubProperties();
 
 		Assertions.assertThat(france.getName()).isNotNull();
 		Assertions.assertThat(france.getCapitaCity()).isNotNull();
@@ -41,6 +49,7 @@ public class BeanInitializerTest {
 		Assertions.assertThat(france.getName()).isNull();
 		Assertions.assertThat(france.getCapitaCity()).isNotNull();
 		Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
+		Assertions.assertThat(france.getCapitaCity().getCountry()).isNull();
 	}
 
 	// @Test

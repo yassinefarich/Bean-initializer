@@ -7,6 +7,7 @@ public class City {
 	private String cityName ;
 	private int phonePrefix;
 	private List<Integer> cityZipCodes;
+	private Country country;
 	
 	public String getCityName() {
 		return cityName;
@@ -25,6 +26,15 @@ public class City {
 	}
 	public void setCityZipCodes(List<Integer> cityZipCodes) {
 		this.cityZipCodes = cityZipCodes;
+	}
+	public Country getCountry() {
+		return country;
+	}
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+	public void setPhonePrefix(int phonePrefix) {
+		this.phonePrefix = phonePrefix;
 	}
 	
 	

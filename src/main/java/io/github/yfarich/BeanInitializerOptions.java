@@ -3,6 +3,7 @@ package io.github.yfarich;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * 
@@ -19,6 +20,8 @@ public interface BeanInitializerOptions<T> {
 	T withOnlySubPropertiesWithClassName(List<String> classNames);
 
 	T withOnlySubPropertiesAccordingToPredicates(List<Predicate<Field>> classNames);
+	
+	<TB> BeanInitializerOptions<T> withTypeSupplier(Class<TB> clazz , Supplier<TB> beanProvider);
 
 	// T withAllSubPropertiesExceptInPackages(List<String> packages);
 
