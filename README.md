@@ -5,26 +5,46 @@ Bean-initializer is a Java utilitiy dedicated to help developers to initialize O
 
 Bean-initializer use only reflexive API , which make it easy to be integrated in java projects .
 
-**Note** : Project is under construction :construction: :construction:
 
 ## Getting Started
 
 ### Example of use
 
+ * Create new Object with all subObjects
 ```java
-  Country france = BeanInitializer.createNew(Country.class)
-				.withOnlySubPropertiesWithClassName(Arrays.asList("City", "Coutry"));
-		Assertions.assertThat(france.getName()).isNull();
-		Assertions.assertThat(france.getCapitaCity()).isNotNull();
-		Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
+   City grenoble = BeanInitializer.createNew(City.class)
+                    .withAllSubProperties();
  ```
+
+ * Create new Object with Type suppliers
+```java
+   Country france = BeanInitializer.createNew(Country.class)
+                    .withTypeSupplier(List.class, () -> new ArrayList<>()) // 'List' is an Interface
+                    .withTypeSupplier(Double.class, () -> Double.valueOf(0)) // 'Double has no no argument constructor'
+                    .withAllSubProperties();
+ ```
+
+ * Create new Object with only fileds of classe
+```java
+   Country france = BeanInitializer.createNew(Country.class)
+                    .withOnlySubPropertiesWithClassName(Arrays.asList("City", "Coutry"));
+ ```
+
+ * Create new Object with predicates on fields
+```java
+   Predicate<Field> isPrivate = field -> !Modifier.isPrivate(field.getModifiers());
+   Country france = BeanInitializer.createNew(Country.class)
+                    .withOnlySubPropertiesAccordingToPredicates(Arrays.asList(isPrivate));
+ ```
+
+
  
 More examples are available on [Test class](https://github.com/yassinefarich/Bean-initializer/blob/master/src/test/java/io/github/yfarich/beaninitializer/BeanInitializerTest.java).
 
 ### Prerequisites
  * Java 8
- * no argument constructor for objects 
- * TypeSupplier for Abstract classes ,interfaces or Objects with no argument constructor *(Example below)*
+ * no argument constructor
+ * TypeSupplier for Abstract classes ,interfaces or Types with no argument constructor *(Example below)*
  ```java
      Country france = BeanInitializer.createNew(Country.class)
                        .withTypeSupplier(List.class, () -> new ArrayList<>()) // 'List' is Abstract type (Interface) 

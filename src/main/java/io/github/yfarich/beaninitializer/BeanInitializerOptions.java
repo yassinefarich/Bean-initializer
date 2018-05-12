@@ -16,17 +16,17 @@ import java.util.function.Supplier;
  */
 public interface BeanInitializerOptions<T> {
 
-	T withOnlySubPropertiesInPackages(List<String> packages);
+    T withOnlySubPropertiesInPackages(List<String> packages);
 
-	T withOnlySubPropertiesWithClassName(List<String> classNames);
+    T withOnlySubPropertiesWithClassName(List<String> classNames);
 
-	T withOnlySubPropertiesAccordingToPredicates(List<Predicate<Field>> classNames);
+    T withOnlySubPropertiesAccordingToPredicates(List<Predicate<Field>> classNames);
 
-	<TB> BeanInitializerOptions<T> withTypeSupplier(Class<TB> clazz, Supplier<TB> beanProvider);
+    <B> BeanInitializerOptions<T> withTypeSupplier(Class<B> clazz, Supplier<B> beanProvider);
 
-	T withAllSubPropertiesExceptInPackages(List<String> packages);
+    T withAllSubPropertiesExceptInPackages(List<String> packages);
 
-	T withAllSubPropertiesExceptWithClassName(List<String> classNames);
+    T withAllSubPropertiesExceptWithClassName(List<String> classNames);
 
-	T withAllSubProperties();
+    T withAllSubProperties();
 }

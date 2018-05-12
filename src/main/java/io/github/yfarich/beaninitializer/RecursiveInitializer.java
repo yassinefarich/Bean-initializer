@@ -16,15 +16,19 @@ import java.util.logging.Logger;
 
 public class RecursiveInitializer {
 
-	private static final Logger LOGGER = Logger.getLogger(BeanInitializer.class.getName());
-	private static final boolean noErrorIsAccepted = false;
+    //Some parameters
+	private static final int MAX_BRANCH_SAME_CLASS_INIT_TIMES = 2;
+	private static final boolean EXCEPTION_WHEN_CANNOT_INSTANCIATE = false;
+	   
+    private static final Logger LOGGER = Logger.getLogger(BeanInitializer.class.getName());
+
 	private Map<Class<?>, Supplier<?>> suppliers = new HashMap<>();
 
 	<T> T initializeRecursively(T object, List<Predicate<Field>> predicates) {
 		return initializeRecursively(object, predicates, new ArrayList<>());
 	}
 
-	private <T> T initializeRecursively(T object, List<Predicate<Field>> predicates, List<Class> classStack) {
+	private <T> T initializeRecursively(T object, List<Predicate<Field>> predicates, List<Class<?>> classStack) {
 
 		try {
 			classStack.add(object.getClass());
@@ -46,14 +50,14 @@ public class RecursiveInitializer {
 		} catch (RuntimeException e) {
 			LOGGER.log(Level.WARNING, e.getMessage());
 
-			if (noErrorIsAccepted)
+			if (EXCEPTION_WHEN_CANNOT_INSTANCIATE)
 				throw new RuntimeException(e.getMessage());
 		}
 		return object;
 	}
 
-	private <T> boolean classHasBeenInitializedBefore(T object, @SuppressWarnings("rawtypes") List<Class> classStack) {
-		return classStack.stream().filter(calzz -> Objects.equals(calzz, object.getClass())).count() > 2;
+	private <T> boolean classHasBeenInitializedBefore(T object, List<Class<?>> classStack) {
+		return classStack.stream().filter(calzz -> Objects.equals(calzz, object.getClass())).count() > MAX_BRANCH_SAME_CLASS_INIT_TIMES;
 	}
 
 	private Function<Field, Optional<Object>> instantiateFieldsOn(Object object) {
@@ -83,7 +87,7 @@ public class RecursiveInitializer {
 			} catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 				LOGGER.log(Level.WARNING, e.getMessage());
 
-				if (noErrorIsAccepted)
+				if (EXCEPTION_WHEN_CANNOT_INSTANCIATE)
 					throw new RuntimeException(e.getMessage());
 			}
 
