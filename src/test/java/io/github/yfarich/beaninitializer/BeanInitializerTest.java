@@ -1,5 +1,7 @@
 package io.github.yfarich.beaninitializer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -18,9 +20,9 @@ public class BeanInitializerTest {
     @Test
     public void createNewTest() {
         City grenoble = BeanInitializer.createNew(City.class).withAllSubProperties();
-        Assertions.assertThat(grenoble).isNotNull();
-        Assertions.assertThat(grenoble.getCityName()).isNotNull();
-        Assertions.assertThat(grenoble.getPhonePrefix()).isNotNull();
+        assertThat(grenoble).isNotNull();
+        assertThat(grenoble.getCityName()).isNotNull();
+        assertThat(grenoble.getPhonePrefix()).isNotNull();
     }
 
     @Test
@@ -30,12 +32,12 @@ public class BeanInitializerTest {
                 .withTypeSupplier(Double.class, () -> Double.valueOf(0)) // 'Double has no no argument constructor'
                 .withAllSubProperties();
 
-        Assertions.assertThat(france.getName()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity()).isNotNull();
-        Assertions.assertThat(france.getPopulation()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getCityName()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getPhonePrefix()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getCityZipCodes()).isNotNull();
+        assertThat(france.getName()).isNotNull();
+        assertThat(france.getCapitaCity()).isNotNull();
+        assertThat(france.getPopulation()).isNotNull();
+        assertThat(france.getCapitaCity().getCityName()).isNotNull();
+        assertThat(france.getCapitaCity().getPhonePrefix()).isNotNull();
+        assertThat(france.getCapitaCity().getCityZipCodes()).isNotNull();
     }
 
     @Test
@@ -43,10 +45,10 @@ public class BeanInitializerTest {
         Country france = BeanInitializer.createNew(Country.class)
                 .withOnlySubPropertiesWithClassName(Arrays.asList("City", "Coutry"));
 
-        Assertions.assertThat(france.getName()).isNull();
-        Assertions.assertThat(france.getCapitaCity()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
-        Assertions.assertThat(france.getCapitaCity().getCountry()).isNull();
+        assertThat(france.getName()).isNull();
+        assertThat(france.getCapitaCity()).isNotNull();
+        assertThat(france.getCapitaCity().getCityName()).isNull();
+        assertThat(france.getCapitaCity().getCountry()).isNull();
     }
 
     @Test
@@ -54,9 +56,9 @@ public class BeanInitializerTest {
         Country france = BeanInitializer.createNew(Country.class)
                 .withOnlySubPropertiesInPackages(Arrays.asList("io.github.yfarich"));
 
-        Assertions.assertThat(france.getName()).isNull();
-        Assertions.assertThat(france.getCapitaCity()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
+        assertThat(france.getName()).isNull();
+        assertThat(france.getCapitaCity()).isNotNull();
+        assertThat(france.getCapitaCity().getCityName()).isNull();
     }
 
     @Test
@@ -67,9 +69,9 @@ public class BeanInitializerTest {
                 .withOnlySubPropertiesAccordingToPredicates(Arrays.asList(isPrivate));
 
         // Public Field
-        Assertions.assertThat(france.getName()).isNotNull();
+        assertThat(france.getName()).isNotNull();
         // Private Field
-        Assertions.assertThat(france.getCapitaCity()).isNull();
+        assertThat(france.getCapitaCity()).isNull();
         ;
     }
 
@@ -78,9 +80,9 @@ public class BeanInitializerTest {
         Country france = BeanInitializer.createNew(Country.class)
                 .withAllSubPropertiesExceptInPackages(Arrays.asList("java.lang"));
 
-        Assertions.assertThat(france.getName()).isNull();
-        Assertions.assertThat(france.getCapitaCity()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity().getCityName()).isNull();
+        assertThat(france.getName()).isNull();
+        assertThat(france.getCapitaCity()).isNotNull();
+        assertThat(france.getCapitaCity().getCityName()).isNull();
     };
 
     @Test
@@ -88,8 +90,8 @@ public class BeanInitializerTest {
         Country france = BeanInitializer.createNew(Country.class)
                 .withAllSubPropertiesExceptWithClassName(Arrays.asList("City"));
 
-        Assertions.assertThat(france.getName()).isNotNull();
-        Assertions.assertThat(france.getCapitaCity()).isNull();
+        assertThat(france.getName()).isNotNull();
+        assertThat(france.getCapitaCity()).isNull();
     };
 
     @Test
@@ -99,8 +101,8 @@ public class BeanInitializerTest {
 
         france = BeanInitializer.initialize(france).withAllSubProperties();
 
-        Assertions.assertThat(france.getName()).isEqualTo("France");
-        Assertions.assertThat(france.getCapitaCity()).isNotNull();
+        assertThat(france.getName()).isEqualTo("France");
+        assertThat(france.getCapitaCity()).isNotNull();
     };
 
     @Test(expected = RuntimeException.class)
