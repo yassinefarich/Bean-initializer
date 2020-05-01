@@ -2,15 +2,15 @@ package io.github.yfarich.beaninitializer.beans;
 
 public class Country {
 
-	private City capitaCity;
+	private City capital;
 	public String name;
 	private Double population;
 	
-	public City getCapitaCity() {
-		return capitaCity;
+	public City getCapital() {
+		return capital;
 	}
-	public void setCapitaCity(City capitaCity) {
-		this.capitaCity = capitaCity;
+	public void setCapital(City capital) {
+		this.capital = capital;
 	}
 	public String getName() {
 		return name;

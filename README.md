@@ -43,8 +43,8 @@ More examples are available on [Test class](https://github.com/yassinefarich/Bea
 
 ### Prerequisites
  * Java 8
- * no argument constructor
- * TypeSupplier for Abstract classes ,interfaces or Types with no argument constructor *(Example below)*
+ * no arg constructor
+ * TypeSupplier for Abstract classes ,interfaces or Types with no arg constructor *(Example below)*
  ```java
      Country france = BeanInitializer.createNew(Country.class)
                        .withTypeSupplier(List.class, () -> new ArrayList<>()) // 'List' is Abstract type (Interface) 

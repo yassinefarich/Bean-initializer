@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class RecursiveInitializer {
 
-    //Some parameters
+    //Initializer parameters
 	private static final int MAX_BRANCH_SAME_CLASS_INIT_TIMES = 2;
 	private static final boolean EXCEPTION_WHEN_CANNOT_INSTANCIATE = false;
 	   
@@ -66,7 +66,7 @@ public class RecursiveInitializer {
 			try {
 				Class<?> fieldClass = field.getType();
 
-				boolean isAccessible = field.isAccessible();
+				boolean isAccessible = field.canAccess(object);
 				field.setAccessible(true);
 
 				Object fieldValue = field.get(object);

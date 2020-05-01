@@ -1,17 +1,18 @@
 package io.github.yfarich.beaninitializer;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
+
 public class BeanInitializer<T> implements BeanInitializerOptions<T> {
 
-    private static final List<Predicate<Field>> ALWAYS_TRUE_PREDICATES = Arrays.asList(field -> true);
+    private static final List<Predicate<Field>> ALWAYS_TRUE_PREDICATES = List.of(field -> true);
 
     private Map<Class<?>, Supplier<?>> beenSuppliers = new HashMap<>();
 
@@ -28,58 +29,58 @@ public class BeanInitializer<T> implements BeanInitializerOptions<T> {
     public static <T> BeanInitializerOptions<T> createNew(Class<T> clazz) {
         T instance;
         try {
-            instance = clazz.newInstance();
+            instance = clazz.getDeclaredConstructor().newInstance();
             return new BeanInitializer<>(instance);
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public T withOnlySubPropertiesInPackages(List<String> packages) {
-        Objects.requireNonNull(packages);
+        requireNonNull(packages);
         return new RecursiveInitializer().withSuppliers(beenSuppliers).initializeRecursively(objectInstance,
-                Arrays.asList(makePackageNamePredicate(packages)));
+                List.of(makePackageNamePredicate(packages)));
     }
 
     @Override
     public T withAllSubPropertiesExceptInPackages(List<String> packages) {
-        Objects.requireNonNull(packages);
+        requireNonNull(packages);
         return new RecursiveInitializer().withSuppliers(beenSuppliers).initializeRecursively(objectInstance,
-                Arrays.asList(makePackageNamePredicate(packages).negate()));
+                List.of(makePackageNamePredicate(packages).negate()));
     }
 
     private Predicate<Field> makePackageNamePredicate(List<String> packages) {
         return field -> {
             String fieldPackageName = field.getType().getPackage().getName();
-            return packages.stream().filter(fieldPackageName::startsWith).count() > 0;
+            return packages.stream().anyMatch(fieldPackageName::startsWith);
         };
     }
 
     @Override
     public T withOnlySubPropertiesWithClassName(List<String> classNames) {
-        Objects.requireNonNull(classNames);
+        requireNonNull(classNames);
         return new RecursiveInitializer().withSuppliers(beenSuppliers).initializeRecursively(objectInstance,
-                Arrays.asList(makeClassNamePredicate(classNames)));
+                List.of(makeClassNamePredicate(classNames)));
     }
 
     @Override
     public T withAllSubPropertiesExceptWithClassName(List<String> classNames) {
-        Objects.requireNonNull(classNames);
+        requireNonNull(classNames);
         return new RecursiveInitializer().withSuppliers(beenSuppliers).initializeRecursively(objectInstance,
-                Arrays.asList(makeClassNamePredicate(classNames).negate()));
+                List.of(makeClassNamePredicate(classNames).negate()));
     }
 
     private Predicate<Field> makeClassNamePredicate(List<String> classNames) {
         return field -> {
             String filedClassName = field.getType().getName();
-            return classNames.stream().filter(filedClassName::contains).count() > 0;
+            return classNames.stream().anyMatch(filedClassName::contains);
         };
     }
 
     @Override
     public T withOnlySubPropertiesAccordingToPredicates(List<Predicate<Field>> predicates) {
-        Objects.requireNonNull(predicates);
+        requireNonNull(predicates);
         return new RecursiveInitializer().withSuppliers(beenSuppliers).initializeRecursively(objectInstance,
                 predicates);
     }
